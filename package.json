@@ -1,0 +1,22 @@
+{
+  "name": "chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+"start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "shirin",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "http": "0.0.0",
+    "jsonwebtoken": "^7.1.9",
+    "mongoose": "^4.6.1",
+    "websocket": "^1.0.23",
+    "url": "^0.11.0",
+    "websocket": "^1.0.23"
+  }
+}

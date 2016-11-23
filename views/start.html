@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Web Chat</title>
+</head>
+<body id = 'body'>
+<button id = 'signup'>Sign Up</button>
+<button id = 'login'>Login</button>
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$('#signup').click(function(){
+		$.get('/webchat/signup',function(data){
+				$('#body').html(data);
+		})
+	})
+	$('#login').click(function(){
+		$.get('/webchat/login',function(data){
+				$('#body').html(data);
+		})
+	})
+</script>
+</body>
+</html>

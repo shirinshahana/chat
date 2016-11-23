@@ -1,0 +1,14 @@
+version: "2"
+services:
+  web:
+    build: .
+    image: chatapp6
+    volumes:
+      - ./:/app
+    ports:
+      - "8006:8006"
+    links:
+      - mongo
+  mongo:
+    image: mongo
+    

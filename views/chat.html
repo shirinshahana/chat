@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>WebSockets - Simple chat</title>
+
+        <style>
+        * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
+        p { line-height:18px; }
+        div { width:500px; margin-left:auto; margin-right:auto;}
+        #content { padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll;
+                   border:1px solid #CCC; margin-top:10px; height: 160px; }
+        #input { border-radius:2px; border:1px solid #ccc;
+                 margin-top:10px; padding:5px; width:400px;  }
+        #status { width:88px; display:block; float:left; margin-top:15px; }
+        </style>
+    </head>
+    <body>
+    <p id = "salutation"></p>
+        <div id="content"></div>
+        <div>
+       
+        <span id="status">Connecting...</span>
+      To : <input type="text" id="to" disabled= disabled />
+    Enter message:<input type="text" id="message" disabled= disabled />
+         <button id = "send">
+             Send
+         </button>
+        </div>
+        <button id = 'logout'>Logout
+        </button>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script >
+            var content = $('#content');
+    var to = $('#to');
+    var message = $('#message');
+
+          
+            var connection = new WebSocket('ws://10.7.1.20:8006?token='+token);
+            console.log(connection)
+            connection.onopen = function () {
+                $('#salutation').text('Hi '+ name);
+                  $('#status').text('Connected');
+        to.removeAttr('disabled');
+        message.removeAttr('disabled');
+        
+       
+            };
+
+ connection.onerror = function (error) {
+        // just in there were some problems with conenction...
+        content.html($('<p>', { text: 'Sorry, but there\'s some problem with your '
+                                    + 'connection or the server is down.' } ));
+        connection.close();
+    };
+
+connection.onclose = function () {
+        // just in there were some problems with conenction...
+        content.html($('<p>', { text: 'Sorry, The connection have been closed due to some reasons.'  } ));
+        connection.close();
+    };
+
+connection.onmessage = function (message) {
+        
+        try {
+            var json = JSON.parse(message.data);
+        } catch (e) {
+            console.log('This doesn\'t look like a valid JSON: ', message.data);
+            return;
+        }
+         if (json.type === 'alert') { 
+            
+            
+            
+            alert(json.data);
+        }
+    
+else{
+   
+    
+ addMessage( json.data.author,json.data.to, json.data.text, new Date(json.data.time));
+}
+
+
+
+}
+
+$("#send").click(function() {
+        
+            var msg = $('#message').val();
+            if (!msg) {
+                return;
+            }
+            
+            
+            connection.send(JSON.stringify({to: to.val(), msg: msg}));
+            $('#to').val('');
+            $('#message').val('');
+           
+           
+            
+    });
+
+
+
+
+
+
+ setInterval(function() {
+        if (connection.readyState !== 1) {
+            $('#status').text('Error');
+            to.attr('disabled', 'disabled').val('Unable to comminucate '
+                                                 + 'with the WebSocket server.');
+        }
+    }, 3000);
+
+
+function addMessage( author, to, message, dt) {
+        if(author===name)
+        content.prepend('<p><span >' + to + '</span>  : ' +
+             + (dt.getHours() < 10 ? '0' + dt.getHours() : dt.getHours()) + ':'
+             + (dt.getMinutes() < 10 ? '0' + dt.getMinutes() : dt.getMinutes())
+             + ': ' + message + '</p>');
+        else
+            content.prepend('<p><span >' + author + '</span>  : ' +
+             + (dt.getHours() < 10 ? '0' + dt.getHours() : dt.getHours()) + ':'
+             + (dt.getMinutes() < 10 ? '0' + dt.getMinutes() : dt.getMinutes())
+             + ': ' + message + '</p>');
+    }
+
+$('#logout').click(function(){
+  
+     //connection.close();
+     $.post('/webchat/logout/',{
+                api_key : "qwertyuiop",
+                username:name},function(data){
+        if(data.action==='logout')
+          alert(data.message)
+         $.get("/webchat/login",function(data,status){ 
+            $('#body').html(data);
+
+        }) 
+     })
+}
+   
+
+)
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,42 @@
+<html>
+  <head>
+  </head>
+  <body id = "body">
+    Username:<input type = text id ="name">
+    Password :<input type=password id = "password">
+    <button type = submit  id = "signup">sign up </button>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script>
+        $("#signup").click(function() {
+            var name = $("#name").val();
+        
+            var pass = $("#password").val();
+            var obj =  {  api_key : "qwertyuiop",
+                            username: name,
+                          password: pass
+                        }
+  
+         var jqxhr = $.post("/webchat/signup", obj,function(data){
+           
+            if(data.status === 200)
+            $.get("/webchat/login",function(data,status){ 
+
+            $('#body').html(data);
+ })
+           })
+            
+            .fail(function (){
+              alert("The username Exists" );
+          $("#name").val("")
+        $("#password").val('')
+          })
+       
+
+})
+       
+       
+ 
+</script>
+</body>
+<html>

@@ -1,0 +1,39 @@
+<html>
+<head>
+</head>
+<body id = 'body'>
+Username:<input type = text id ="name">
+Passwd :<input type=password id = "password">
+<button type = submit  id = "login">Login </button>
+</form>
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+var token;
+ var name ;
+        $("#login").click(function() {
+            name = $("#name").val();
+            var pass = $("#password").val();
+            $.post("/webchat/login", {
+                api_key : "qwertyuiop",
+                username: name,
+                
+                password: pass
+            },function(data, status){
+        token = data.token;
+        if(data.status===200)
+        {
+           $.get("/webchat/chat",function(data,status){ 
+            $('#body').html(data);
+
+        })}
+            else{
+            alert(data.message );
+     $("#name").val("")
+    $("#password").val('')
+          }
+    });
+        });
+ 
+</script>
+</body>
+<html>
